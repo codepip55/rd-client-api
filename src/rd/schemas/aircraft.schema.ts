@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
+import { User } from 'src/users/schemas/user.schema';
 
 export type RDAircraftDocument = RDAircraft & Document;
 
@@ -8,11 +9,19 @@ export class RDAircraft {
   @Prop({ required: true })
   addedTimestamp: Date;
 
-  @Prop({ required: true })
-  localController: string;
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'rd_user',
+    required: true,
+  })
+  localController: User;
 
-  @Prop({ required: true })
-  departureController: string;
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'rd_user',
+    required: true,
+  })
+  departureController: User;
 
   @Prop({ required: true })
   accepted: boolean;

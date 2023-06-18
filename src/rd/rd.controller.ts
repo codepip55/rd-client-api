@@ -42,7 +42,7 @@ export class RdController {
 
   /**
    * Get the list of aircraft for a specific controller.
-   * Input controller's callsign.
+   * Input controller's ObjectID.
    */
   @Get('list/:controller')
   @UseGuards(JwtAuthGuard)

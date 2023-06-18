@@ -31,7 +31,11 @@ export class RdService {
       ? { transponder: filter.code }
       : { callsign: filter.callsign };
 
-    const rdAircraft = await this.aircraftModel.find(query).exec();
+    const rdAircraft = await this.aircraftModel
+      .find(query)
+      .populate('departureController')
+      .populate('localController')
+      .exec();
     if (!rdAircraft) throw new NotFoundException();
 
     // Data from VATSIM
@@ -72,14 +76,15 @@ export class RdService {
     const rdAircraft = new this.aircraftModel({
       addedTimestamp: new Date().toISOString(),
       localController: localController,
-      departureController: 'TODO',
+      departureController: '648ea6b6409d343f79cf9f1a',
       accepted: false,
-      callsign: vatsimAircraft.callsign,
-      transponder: vatsimAircraft.flight_plan.assigned_transponder,
+      callsign: vatsimAircraft[0].callsign,
+      transponder: vatsimAircraft[0].flight_plan.assigned_transponder,
     });
     const savedRdAircraft = await rdAircraft.save();
+    await savedRdAircraft.populate('departureController')
 
-    return { rd: savedRdAircraft, vatsim: vatsimAircraft };
+    return { rd: savedRdAircraft, vatsim: vatsimAircraft[0] };
   }
 
   async getRdList(
@@ -101,6 +106,8 @@ export class RdService {
             { localController: controller },
           ],
         })
+        .populate('departureController')
+        .populate('localController')
         .exec(),
     ]);
 
@@ -126,12 +133,16 @@ export class RdService {
     if (!rdAircraft) throw new NotFoundException();
 
     rdAircraft.addedTimestamp = dto.addedTimestamp;
+    // @ts-expect-error Expecting User object, but receives ObjectID as string.
     rdAircraft.localController = dto.localController;
+    // @ts-expect-error Expecting User object, but receives ObjectID as string.
     rdAircraft.departureController = dto.departureController;
     rdAircraft.accepted = dto.accepted;
     rdAircraft.transponder = dto.transponder;
 
     const savedRdAircraft = await rdAircraft.save();
+    await savedRdAircraft.populate('departureController');
+    await savedRdAircraft.populate('localController');
 
     // Data from VATSIM
     const vatsimAircraft = (
@@ -152,7 +163,11 @@ export class RdService {
       ? { transponder: filter.code }
       : { callsign: filter.callsign };
 
-    return await this.aircraftModel.findOneAndDelete(query).exec();
+    return await this.aircraftModel
+      .findOneAndDelete(query)
+      .populate('departureController')
+      .populate('localController')
+      .exec();
   }
 
   @Cron('* * * * *') // Every Minute
