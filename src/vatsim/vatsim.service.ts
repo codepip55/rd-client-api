@@ -15,26 +15,28 @@ export class VatsimService {
   ) { }
 
   async getDatafeed() {
-    const cachedDatafeedUrl = (await this.cacheManager.get('datafeed_url')) as string;
+    // const cachedDatafeedUrl = (await this.cacheManager.get('datafeed_url')) as string;
 
-    let datafeedUrl: string;
-    if (!cachedDatafeedUrl) {
-      const statusUrl = this.configService.get<string>('VATSIM_STATUS_URL')
+    // let datafeedUrl: string;
+    // if (!cachedDatafeedUrl) {
+    //   const statusUrl = this.configService.get<string>('VATSIM_STATUS_URL')
 
-      const $urls = this.http.get(statusUrl)
+    //   const $urls = this.http.get(statusUrl)
 
-      let datafeedUrls = (await firstValueFrom($urls)).data.data.v3;
-      datafeedUrl = datafeedUrls[Math.random() * (datafeedUrls.length - 1)]
+    //   let datafeedUrls = (await firstValueFrom($urls)).data.data.v3;
+    //   datafeedUrl = datafeedUrls[Math.random() * (datafeedUrls.length - 1)]
 
-      await this.cacheManager.set('datafeed_url', datafeedUrl.toString(), 24 * 60 * 60 * 1000) // Cache for 24 hours
-    } else {
-      datafeedUrl = cachedDatafeedUrl
-    }
+    //   await this.cacheManager.set('datafeed_url', datafeedUrl.toString(), 24 * 60 * 60 * 1000) // Cache for 24 hours
+    // } else {
+    //   datafeedUrl = cachedDatafeedUrl
+    // }
 
     const cachedDatafeed = (await this.cacheManager.get('datafeed')) as string;
 
     if (!cachedDatafeed) {
-      const $datafeed = this.http.get(datafeedUrl);
+      // const $datafeed = this.http.get(datafeedUrl);
+      // let datafeed = (await firstValueFrom($datafeed)).data
+      const $datafeed = this.http.get('https://gist.githubusercontent.com/codepip55/eb518cad92ba836a73ccbbcecd3a3af1/raw/31ccbbd36dc2bc11496cbe65a6206c29ef34e7db/datafeed.json');
       let datafeed = (await firstValueFrom($datafeed)).data
 
       await this.cacheManager.set(
@@ -87,7 +89,7 @@ export class VatsimService {
     return { controller }
   }
 
-  async getControllerByCid(cid: string) {
+  async getControllerByCid(cid: number) {
     if (!cid) throw new BadRequestException('Must specify a cid')
 
     const controllers = await this.getAllControllers()

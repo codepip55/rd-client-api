@@ -36,6 +36,6 @@ export class PositionsController {
   logoffPosition(@Req() req: Request) {
     const user = req.user as User
 
-    return this.positionsService.logonPosition(user)
+    return this.positionsService.logoffPosition(user)
   }
 }

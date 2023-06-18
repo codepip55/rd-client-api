@@ -27,15 +27,14 @@ export class PositionsService {
   }
 
   async logonPosition(user: User): Promise<User> {
-    const position = await this.vatsimService.getControllerByCid(user.cid.toString())
+    const position = await this.vatsimService.getControllerByCid(user.cid)
 
     if (position.controller.length < 1) throw new NotFoundException('Controller not found')
-    console.log(position)
 
     const fetchedUser = await this.userSchema.findById(user.id)
     if (!fetchedUser) throw new NotFoundException('User not found')
 
-    fetchedUser.currentPosition = position.controller.callsign;
+    fetchedUser.currentPosition = position.controller[0].callsign;
 
     const savedUser = await fetchedUser.save()
     return savedUser;
@@ -57,7 +56,7 @@ export class PositionsService {
     const loggedOnUsers = await this.userSchema.find({ currentPosition: { $ne: null }}).exec()
 
     loggedOnUsers.forEach(async user => {
-      const controller = await this.vatsimService.getControllerByCid(user.cid.toString())
+      const controller = await this.vatsimService.getControllerByCid(user.cid)
       if (controller.controller !== 'none') return;
 
       user.currentPosition = null;
