@@ -1,15 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UseGuards, } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 
@@ -24,6 +13,9 @@ import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
 export class RdController {
   constructor(private rdService: RdService) {}
 
+  /**
+   * Get all aircraft registered to the RD service
+   */
   @Get('aircraft')
   @UseGuards(JwtAuthGuard)
   getAircraft(@Query() qs: Record<string, string>) {
@@ -33,6 +25,11 @@ export class RdController {
     return this.rdService.getAircraft({ code, callsign });
   }
 
+  /**
+   * Registers and aircraft with the RD client.
+   * Input code or callsign. Will pull from the VATSIM 
+   * datafeed and store the relevant information
+   */
   @Post('aircraft')
   @UseGuards(JwtAuthGuard)
   addAircraft(@Req() req: Request, @Query() qs: Record<string, string>) {
@@ -43,12 +40,20 @@ export class RdController {
     return this.rdService.addAircraftToRD({ code, callsign }, user);
   }
 
+  /**
+   * Get the list of aircraft for a specific controller.
+   * Input controller's callsign.
+   */
   @Get('list/:controller')
   @UseGuards(JwtAuthGuard)
   getControllerList(@Param('controller') controller: string) {
     return this.rdService.getRdList(controller);
   }
 
+  /**
+   * Update a registered aicraft.
+   * Mostly used to change the accepted state
+   */
   @Put('aircraft')
   @UseGuards(JwtAuthGuard)
   updateAircraft(
@@ -61,6 +66,11 @@ export class RdController {
     return this.rdService.updateRdAircraft({ code, callsign }, body);
   }
 
+  /**
+   * Remove a registered aircraft from the RD Client.
+   * Also run automatically to detect VATSIM connection termination and
+   * when aircraft is airborne.
+   */
   @Delete('aircraft')
   @UseGuards(JwtAuthGuard)
   deleteAircraft(@Query() qs: Record<string, string>) {

@@ -1,6 +1,8 @@
-import { CacheModule, Module } from '@nestjs/common';
-import { VatsimService } from './vatsim.service';
+import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
+import { CacheModule } from '@nestjs/cache-manager';
+
+import { VatsimService } from './vatsim.service';
 
 @Module({
   imports: [HttpModule, CacheModule.register()],
