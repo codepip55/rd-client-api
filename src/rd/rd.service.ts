@@ -1,17 +1,12 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException, } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Cron } from '@nestjs/schedule';
 
 import { RDAircraft, RDAircraftDocument } from './schemas/aircraft.schema';
 import { VatsimService } from 'src/vatsim/vatsim.service';
 import { RdAircraftDto } from './dto/rdAircraft.dto';
 import { User } from 'src/users/schemas/user.schema';
-import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class RdService {
@@ -64,7 +59,7 @@ export class RdService {
     if (!user || !user.currentPosition) throw new ForbiddenException();
     let localController: User | null;
     if (user.currentPosition.endsWith('TWR')) localController = user;
-    /* placeholder */ else throw new ForbiddenException(); // check if designated as DEP. If not DEP, Forbidden
+    /* placeholder */ else throw new ForbiddenException(); // check if designated as DEP. If not DEP, Forbidden TODO:
 
     // Data from VATSIM
     const vatsimAircraft = (
