@@ -10,9 +10,9 @@ import * as Sentry from '@sentry/node';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const configService = app.get(ConfigService)
-  const cookieSecret = configService.get('COOKIE_SECRET')
-  app.use(cookieParser(cookieSecret))
+  const configService = app.get(ConfigService);
+  const cookieSecret = configService.get('COOKIE_SECRET');
+  app.use(cookieParser(cookieSecret));
 
   app.enableCors({
     origin: [/pepijncolenbrander\.com$/, /localhost(:\d+)?$/],

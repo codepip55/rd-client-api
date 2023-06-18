@@ -10,12 +10,12 @@ import { VatsimModule } from 'src/vatsim/vatsim.module';
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: 'rd_aircraft', schema: RDAircraftSchema }
+      { name: 'rd_aircraft', schema: RDAircraftSchema },
     ]),
     VatsimModule,
-    ScheduleModule.forRoot()
+    ScheduleModule.forRoot(),
   ],
   providers: [RdService],
-  controllers: [RdController]
+  controllers: [RdController],
 })
 export class RdModule {}

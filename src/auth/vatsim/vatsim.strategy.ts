@@ -44,7 +44,7 @@ export class VatsimStrategy extends PassportStrategy(Strategy, 'vatsim') {
         nameFirst: response.data.data.personal.name_first,
         nameLast: response.data.data.personal.name_last,
         nameFull: response.data.data.personal.name_full,
-        currentPosition: null
+        currentPosition: null,
       });
     } catch (err) {
       if (err instanceof NotFoundException) {
@@ -53,7 +53,7 @@ export class VatsimStrategy extends PassportStrategy(Strategy, 'vatsim') {
           nameFirst: response.data.data.personal.name_first,
           nameLast: response.data.data.personal.name_last,
           nameFull: response.data.data.personal.name_full,
-          currentPosition: null
+          currentPosition: null,
         });
       } else {
         throw err;

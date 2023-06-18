@@ -1,4 +1,4 @@
-import { IsBoolean, IsISO8601, IsString } from "class-validator";
+import { IsBoolean, IsISO8601, IsString } from 'class-validator';
 
 export class RdAircraftDto {
   @IsISO8601()

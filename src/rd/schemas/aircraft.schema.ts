@@ -1,11 +1,10 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-export type RDAircraftDocument = RDAircraft & Document
+export type RDAircraftDocument = RDAircraft & Document;
 
 @Schema()
 export class RDAircraft {
-
   @Prop({ required: true })
   addedTimestamp: Date;
 

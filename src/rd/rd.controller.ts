@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 
@@ -11,10 +22,7 @@ import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
 @ApiTags('RD')
 @Controller('rd')
 export class RdController {
-
-  constructor(
-    private rdService: RdService
-  ) { }
+  constructor(private rdService: RdService) {}
 
   @Get('aircraft')
   @UseGuards(JwtAuthGuard)
@@ -27,10 +35,7 @@ export class RdController {
 
   @Post('aircraft')
   @UseGuards(JwtAuthGuard)
-  addAircraft(
-    @Req() req: Request,
-    @Query() qs: Record<string, string>
-  ) {
+  addAircraft(@Req() req: Request, @Query() qs: Record<string, string>) {
     const code = qs.code;
     const callsign = qs.callsign;
     const user = req.user as User;
@@ -41,12 +46,15 @@ export class RdController {
   @Get('list/:controller')
   @UseGuards(JwtAuthGuard)
   getControllerList(@Param('controller') controller: string) {
-    return this.rdService.getRdList(controller)
+    return this.rdService.getRdList(controller);
   }
 
   @Put('aircraft')
   @UseGuards(JwtAuthGuard)
-  updateAircraft(@Query() qs: Record<string, string>, @Body() body: RdAircraftDto) {
+  updateAircraft(
+    @Query() qs: Record<string, string>,
+    @Body() body: RdAircraftDto,
+  ) {
     const code = qs.code;
     const callsign = qs.callsign;
 
@@ -59,6 +67,6 @@ export class RdController {
     const code = qs.code;
     const callsign = qs.callsign;
 
-    return this.rdService.deleteRdAircraft({ code, callsign })
+    return this.rdService.deleteRdAircraft({ code, callsign });
   }
 }

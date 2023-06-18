@@ -8,13 +8,11 @@ import { VatsimModule } from 'src/vatsim/vatsim.module';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: 'rd_user', schema: UserSchema },
-    ]),
+    MongooseModule.forFeature([{ name: 'rd_user', schema: UserSchema }]),
     ScheduleModule,
-    VatsimModule
+    VatsimModule,
   ],
   providers: [PositionsService],
-  controllers: [PositionsController]
+  controllers: [PositionsController],
 })
 export class PositionsModule {}
