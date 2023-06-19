@@ -120,9 +120,8 @@ export class RdService {
     return { count, data };
   }
 
-  async updateRdAircraft(
+  async acceptAircraft(
     filter: { code: string | undefined; callsign: string | undefined },
-    dto: RdAircraftDto,
   ): Promise<{ rd: RDAircraft; vatsim: Record<string, any> }> {
     if (!filter.callsign && !filter.code) {
       throw new BadRequestException(
@@ -138,13 +137,7 @@ export class RdService {
     const rdAircraft = await this.aircraftModel.findOne(query).exec();
     if (!rdAircraft) throw new NotFoundException();
 
-    rdAircraft.addedTimestamp = dto.addedTimestamp;
-    // @ts-expect-error Expecting User object, but receives ObjectID as string.
-    rdAircraft.localController = dto.localController;
-    // @ts-expect-error Expecting User object, but receives ObjectID as string.
-    rdAircraft.departureController = dto.departureController;
-    rdAircraft.accepted = dto.accepted;
-    rdAircraft.transponder = dto.transponder;
+    rdAircraft.accepted = true;
 
     const savedRdAircraft = await rdAircraft.save();
     await savedRdAircraft.populate('departureController');

@@ -54,16 +54,15 @@ export class RdController {
    * Update a registered aicraft.
    * Mostly used to change the accepted state
    */
-  @Put('aircraft')
+  @Put('aircraft/accept')
   @UseGuards(JwtAuthGuard)
   updateAircraft(
     @Query() qs: Record<string, string>,
-    @Body() body: RdAircraftDto,
   ) {
     const code = qs.code;
     const callsign = qs.callsign;
 
-    return this.rdService.updateRdAircraft({ code, callsign }, body);
+    return this.rdService.acceptAircraft({ code, callsign });
   }
 
   /**
