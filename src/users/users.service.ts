@@ -44,4 +44,12 @@ export class UsersService {
     const savedUser = await user.save();
     return savedUser;
   }
+
+  // Beta Only
+  async findDepartureController(): Promise<User> {
+    const users = await this.userModel.find({ $or: [{ currentPosition: "SMF_APP" }, { currentPosition: "SMF_DEP" }]});
+
+    const departureController = users.find(u => u.currentPosition === "SMF_DEP") || users[0];
+    return departureController;
+  }
 }

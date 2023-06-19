@@ -6,6 +6,7 @@ import { RdService } from './rd.service';
 import { RdController } from './rd.controller';
 import { RDAircraftSchema } from './schemas/aircraft.schema';
 import { VatsimModule } from 'src/vatsim/vatsim.module';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { VatsimModule } from 'src/vatsim/vatsim.module';
     ]),
     VatsimModule,
     ScheduleModule.forRoot(),
+    UsersModule
   ],
   providers: [RdService],
   controllers: [RdController],

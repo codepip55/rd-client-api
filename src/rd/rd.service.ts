@@ -7,6 +7,7 @@ import { RDAircraft, RDAircraftDocument } from './schemas/aircraft.schema';
 import { VatsimService } from 'src/vatsim/vatsim.service';
 import { RdAircraftDto } from './dto/rdAircraft.dto';
 import { User } from 'src/users/schemas/user.schema';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class RdService {
@@ -14,6 +15,7 @@ export class RdService {
     @InjectModel('rd_aircraft')
     private aircraftModel: Model<RDAircraftDocument>,
     private vatsimService: VatsimService,
+    private usersService: UsersService,
   ) {}
 
   async getAircraft(filter: {
@@ -61,9 +63,12 @@ export class RdService {
 
     // User Data
     if (!user || !user.currentPosition) throw new ForbiddenException();
-    let localController: User | null;
+    let localController: User;
     if (user.currentPosition.endsWith('TWR')) localController = user;
-    /* placeholder */ else throw new ForbiddenException(); // check if designated as DEP. If not DEP, Forbidden TODO:
+      else throw new ForbiddenException('Only TWR can add aircraft to the RD List')
+
+    let departureController: User =  await this.usersService.findDepartureController();
+
 
     // Data from VATSIM
     const vatsimAircraft = (
@@ -76,7 +81,7 @@ export class RdService {
     const rdAircraft = new this.aircraftModel({
       addedTimestamp: new Date().toISOString(),
       localController: localController,
-      departureController: '648ea6b6409d343f79cf9f1a',
+      departureController: departureController,
       accepted: false,
       callsign: vatsimAircraft[0].callsign,
       transponder: vatsimAircraft[0].flight_plan.assigned_transponder,
