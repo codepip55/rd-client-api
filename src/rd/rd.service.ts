@@ -68,6 +68,7 @@ export class RdService {
       else throw new ForbiddenException('Only TWR can add aircraft to the RD List')
 
     let departureController: User =  await this.usersService.findDepartureController();
+    if (!departureController) throw new ForbiddenException('No departure controller')
 
 
     // Data from VATSIM
