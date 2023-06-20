@@ -31,7 +31,7 @@ export class PositionsService {
     const position = await this.vatsimService.getControllerByCid(user.cid);
 
     if (position.controller.length < 1)
-      throw new NotFoundException('Controller not found');
+      throw new NotFoundException('Controller not found. Please connect to the VATSIM network.');
 
     const fetchedUser = await this.userSchema.findById(user.id);
     if (!fetchedUser) throw new NotFoundException('User not found');
