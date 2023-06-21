@@ -60,7 +60,7 @@ export class PositionsService {
 
     loggedOnUsers.forEach(async (user) => {
       const controller = await this.vatsimService.getControllerByCid(user.cid);
-      if (controller.controller !== 'none') return;
+      if (controller.controller.length >= 1) return;
 
       user.currentPosition = null;
       user.save();
