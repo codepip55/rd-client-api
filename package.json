@@ -1,10 +1,10 @@
 {
   "name": "rd-client-api",
   "version": "1.0.0",
-  "description": "",
-  "author": "",
-  "private": true,
-  "license": "UNLICENSED",
+  "description": "A rundown client for VATSIM.",
+  "author": "Pepijn Colenbrander",
+  "private": false,
+  "license": "GPL-3.0-only",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
