@@ -71,6 +71,18 @@ export class RdService {
       })
     ).pilot;
 
+    // Check Duplicate
+    // If duplicate exists, delete it
+    const query = filter.code
+      ? { transponder: filter.code }
+      : { callsign: filter.callsign };
+
+    const dupCount = await this.aircraftModel.countDocuments(query).exec()
+    if (dupCount > 0) {
+      const dup = this.aircraftModel.findOneAndDelete(query).exec()
+      return dup;
+    }
+
     const rdAircraft = new this.aircraftModel({
       addedTimestamp: new Date().toISOString(),
       localController: localController,
