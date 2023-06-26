@@ -21,7 +21,7 @@ export class RdService {
   async getAircraft(filter: {
     code: string | undefined;
     callsign: string | undefined;
-  }): Promise<{ rd: RDAircraft[]; vatsim: Record<string, any> }> {
+  }): Promise<RDAircraft[]> {
     if (!filter.callsign && !filter.code) {
       throw new BadRequestException(
         "Please specify either an aircraft's callsign or valid transponder code",
@@ -40,21 +40,13 @@ export class RdService {
       .exec();
     if (!rdAircraft) throw new NotFoundException();
 
-    // Data from VATSIM
-    const vatsimAircraft = (
-      await this.vatsimService.getPilot({
-        callsign: filter.callsign,
-        transponder: filter.code,
-      })
-    ).pilot;
-
-    return { rd: rdAircraft, vatsim: vatsimAircraft };
+    return rdAircraft;
   }
 
   async addAircraftToRD(
     filter: { code: string | undefined; callsign: string | undefined },
     user: User,
-  ): Promise<{ rd: RDAircraft; vatsim: Record<string, any> }> {
+  ): Promise<RDAircraft> {
     if (!filter.callsign && !filter.code) {
       throw new BadRequestException(
         "Please specify either an aircraft's callsign or valid transponder code",
@@ -90,7 +82,7 @@ export class RdService {
     const savedRdAircraft = await rdAircraft.save();
     await savedRdAircraft.populate('departureController')
 
-    return { rd: savedRdAircraft, vatsim: vatsimAircraft[0] };
+    return savedRdAircraft;
   }
 
   async getRdList(
@@ -122,7 +114,7 @@ export class RdService {
 
   async acceptAircraft(
     filter: { code: string | undefined; callsign: string | undefined },
-  ): Promise<{ rd: RDAircraft; vatsim: Record<string, any> }> {
+  ): Promise<RDAircraft> {
     if (!filter.callsign && !filter.code) {
       throw new BadRequestException(
         "Please specify either an aircraft's callsign or valid transponder code",
@@ -143,15 +135,7 @@ export class RdService {
     await savedRdAircraft.populate('departureController');
     await savedRdAircraft.populate('localController');
 
-    // Data from VATSIM
-    const vatsimAircraft = (
-      await this.vatsimService.getPilot({
-        callsign: filter.callsign,
-        transponder: filter.code,
-      })
-    ).pilot;
-
-    return { rd: savedRdAircraft, vatsim: vatsimAircraft };
+    return savedRdAircraft;
   }
 
   async deleteRdAircraft(filter: {
