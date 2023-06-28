@@ -70,6 +70,7 @@ export class RdService {
         transponder: filter.code,
       })
     ).pilot;
+    if (!vatsimAircraft || vatsimAircraft.length < 1) throw new NotFoundException('Aircraft not found on the VATSIM Network')
 
     // Check Duplicate
     // If duplicate exists, delete it
