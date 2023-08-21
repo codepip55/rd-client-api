@@ -177,7 +177,7 @@ export class RdService {
 
       if (vatsimAircraft.pilot.length < 1)
         return this.aircraftModel.deleteOne({ callsign: aircraft.callsign });
-      if (vatsimAircraft.pilot.altitude > 2500)
+      if (vatsimAircraft.pilot.altitude > 37) // Altitude greater than 37 feet
         return this.aircraftModel.deleteOne({ callsign: aircraft.callsign });
     });
   }
